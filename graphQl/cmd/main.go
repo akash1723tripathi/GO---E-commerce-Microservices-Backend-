@@ -18,6 +18,7 @@ type AppConfig struct {
 }
 
 func main() {
+	fmt.Println("Working")
 	var cfg AppConfig
 	if err := envconfig.Process("", &cfg); err != nil {
 		log.Fatal(err)
@@ -30,7 +31,8 @@ func main() {
 
 	http.Handle("/graphql", handler.New(s.ToExecutableSchema()))
 	http.Handle("/playground", playground.Handler("GraphQL playground", "/graphql"))
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
-	fmt.Println("Working")
+	
 }
