@@ -1,5 +1,13 @@
 schema: schema.graphql
 
+exec:
+  filename: generated.go
+  package: graphql
+
+model:
+  filename: models_gen.go
+  package: graphql
+
 models:
   Account:
     model: github.com/akash1723tripathi/go-microservices/graphql.Account
