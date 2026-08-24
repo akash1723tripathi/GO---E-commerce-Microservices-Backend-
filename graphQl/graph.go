@@ -1,28 +1,31 @@
 package graphql
 
-import gqlgraphql "github.com/99designs/gqlgen/graphql"
+import (
+	gqlgraphql "github.com/99designs/gqlgen/graphql"
+	"github.com/akash1723tripathi/go-microservices/account"
+)
 
 type Server struct{
-	// accountClient *account.client
+	accountClient *account.Client
 	// catalogClient *catalog.client
 	// orderClient  *order.client
 }
 
 func NewGraphQLServer(accountUrl, catalogURL, orderURL string) (*Server, error) {
-	// // Connect to account service
-	// accountClient, err := account.NewClient(accountUrl)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	// Connect to account service
+	accountClient, err := account.NewClient(accountUrl)
+	if err != nil {
+		return nil, err
+	}
 
-	// // Connect to product service
+	// Connect to product service
 	// catalogClient, err := catalog.NewClient(catalogURL)
 	// if err != nil {
 	// 	accountClient.Close()
 	// 	return nil, err
 	// }
 
-	// // Connect to order service
+	// Connect to order service
 	// orderClient, err := order.NewClient(orderURL)
 	// if err != nil {
 	// 	accountClient.Close()
@@ -31,7 +34,7 @@ func NewGraphQLServer(accountUrl, catalogURL, orderURL string) (*Server, error) 
 	// }
 
 	return &Server{
-		// accountClient,
+		accountClient,
 		// catalogClient,
 		// orderClient,
 	}, nil
