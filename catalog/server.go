@@ -1,4 +1,4 @@
-//go:generate protoc ./catalog.proto --go_out=plugins=grpc:./pb
+//go:generate protoc ./catalog.proto --go_out=./pb --go_opt=paths=source_relative --go-grpc_out=./pb --go-grpc_opt=paths=source_relative
 package catalog
 
 import (
@@ -13,6 +13,7 @@ import (
 )
 
 type grpcServer struct {
+	pb.UnimplementedCatalogServiceServer
 	service Service
 }
 
@@ -22,7 +23,7 @@ func ListenGRPC(s Service, port int) error {
 		return err
 	}
 	serv := grpc.NewServer()
-	pb.RegisterCatalogServiceServer(serv, &grpcServer{s})
+	pb.RegisterCatalogServiceServer(serv, &grpcServer{service: s})
 	reflection.Register(serv)
 	return serv.Serve(lis)
 }
