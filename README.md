@@ -112,14 +112,15 @@ Each service folder represents a separate runtime boundary. It may live in the s
 
 ## Current implementation status
 
-The repository currently contains the initial GraphQL foundation:
+The repository currently contains the core synchronous order path:
 
 - The GraphQL schema defines accounts, products, orders, pagination, and mutations.
 - The gateway process is defined under `graphql/cmd` and listens on port `8080`.
-- Account, catalog, and order service directories are reserved for their independent implementations.
-- gRPC clients, service servers, persistence, event consumers, and infrastructure wiring are the next implementation stages.
+- Account and catalog services provide the gRPC dependencies used by the order service.
+- The order service includes its protobuf contract, gRPC server/client, PostgreSQL repository, migration, validation, and total calculation.
+- The GraphQL gateway is wired to account, catalog, and order clients for the account/product queries and create mutations.
 
-The architecture diagram describes the intended complete system. Redis, Elasticsearch, Kafka, RabbitMQ, Prometheus, Grafana, and the email worker are planned platform components and should be introduced incrementally rather than treated as already-running functionality.
+The architecture diagram describes the intended complete system. Redis, Kafka, RabbitMQ, Prometheus, Grafana, inventory processing, notifications, and the email worker are still planned platform components. The current order implementation persists a price snapshot so later catalog changes do not rewrite order history; event publishing and stock reservation remain future work.
 
 ## Design principles
 

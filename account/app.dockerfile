@@ -4,7 +4,7 @@ WORKDIR /go/src/github.com/akash1723tripathi/go-microservices
 COPY go.mod go.sum ./
 COPY vendor vendor
 COPY account account
-RUN GO111MODULE=on go build -mod vendor -o /go/bin/app ./account/cmd/account
+RUN GO111MODULE=on go build -o /go/bin/app ./account/cmd
 
 FROM alpine:3.11
 WORKDIR /usr/bin
