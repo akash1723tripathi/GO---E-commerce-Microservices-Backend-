@@ -1,8 +1,48 @@
 services:
   account:
+    build:
+      context: .
+      dockerfile: account/app.dockerfile
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@account_db:5432/accounts?sslmode=disable
+    depends_on: [account_db]
+    ports: ["8081:8080"]
   catalog:
+    build:
+      context: .
+      dockerfile: catalog/app.dockerfile
+    environment:
+      DATABASE_URL: http://catalog_db:9200
+    depends_on: [catalog_db]
+    ports: ["8082:8080"]
   order:
-  graphQl:
+    build:
+      context: .
+      dockerfile: order/app.dockerfile
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@order_db:5432/orders?sslmode=disable
+      ACCOUNT_SERVICE_URL: account:8080
+      CATALOG_SERVICE_URL: catalog:8080
+    depends_on: [account, catalog, order_db]
+    ports: ["8083:8080"]
+  graphql:
+    build:
+      context: .
+      dockerfile: graphQl/app.dockerfile
+    environment:
+      ACCOUNT_SERVICE_URL: account:8080
+      CATALOG_SERVICE_URL: catalog:8080
+      ORDER_SERVICE_URL: order:8080
+    depends_on: [account, catalog, order]
+    ports: ["8080:8080"]
   account_db:
+    image: postgres:16-alpine
+    environment: { POSTGRES_DB: accounts, POSTGRES_USER: postgres, POSTGRES_PASSWORD: postgres }
+    volumes: ["./account/up.sql:/docker-entrypoint-initdb.d/up.sql:ro"]
   order_db:
+    image: postgres:16-alpine
+    environment: { POSTGRES_DB: orders, POSTGRES_USER: postgres, POSTGRES_PASSWORD: postgres }
+    volumes: ["./order/up.sql:/docker-entrypoint-initdb.d/up.sql:ro"]
   catalog_db:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.26
+    environment: ["discovery.type=single-node", "xpack.security.enabled=false", "ES_JAVA_OPTS=-Xms512m -Xmx512m"]
