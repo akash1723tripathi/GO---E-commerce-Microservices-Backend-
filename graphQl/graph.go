@@ -3,12 +3,14 @@ package graphql
 import (
 	gqlgraphql "github.com/99designs/gqlgen/graphql"
 	"github.com/akash1723tripathi/go-microservices/account"
+	"github.com/akash1723tripathi/go-microservices/catalog"
+	"github.com/akash1723tripathi/go-microservices/order"
 )
 
-type Server struct{
+type Server struct {
 	accountClient *account.Client
-	// catalogClient *catalog.client
-	// orderClient  *order.client
+	catalogClient *catalog.Client
+	orderClient   *order.Client
 }
 
 func NewGraphQLServer(accountUrl, catalogURL, orderURL string) (*Server, error) {
@@ -18,25 +20,23 @@ func NewGraphQLServer(accountUrl, catalogURL, orderURL string) (*Server, error) 
 		return nil, err
 	}
 
-	// Connect to product service
-	// catalogClient, err := catalog.NewClient(catalogURL)
-	// if err != nil {
-	// 	accountClient.Close()
-	// 	return nil, err
-	// }
+	catalogClient, err := catalog.NewClient(catalogURL)
+	if err != nil {
+		accountClient.Close()
+		return nil, err
+	}
 
-	// Connect to order service
-	// orderClient, err := order.NewClient(orderURL)
-	// if err != nil {
-	// 	accountClient.Close()
-	// 	catalogClient.Close()
-	// 	return nil, err
-	// }
+	orderClient, err := order.NewClient(orderURL)
+	if err != nil {
+		accountClient.Close()
+		catalogClient.Close()
+		return nil, err
+	}
 
 	return &Server{
-		accountClient,
-		// catalogClient,
-		// orderClient,
+		accountClient: accountClient,
+		catalogClient: catalogClient,
+		orderClient:   orderClient,
 	}, nil
 }
 
