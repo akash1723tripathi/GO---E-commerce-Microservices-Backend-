@@ -6,9 +6,8 @@ from datetime import date, datetime, time, timedelta
 
 MIN_COMMITS = 12
 MAX_COMMITS = 20
-DEFAULT_START = date(2026, 8, 26)
-DEFAULT_END = date(2026, 8, 28)
-
+DEFAULT_START = date(2026, 8, 26)  #year-month-date
+DEFAULT_END = date(2026, 8, 28)   #year-month-date
 
 def get_commit_count():
     while True:
